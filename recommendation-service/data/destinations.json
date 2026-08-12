@@ -16,7 +16,8 @@
     "popularity": 90,
     "image_source": "Wikimedia Commons (CC BY-SA)",
     "lat": 3.8525,
-    "lng": 11.5134
+    "lng": 11.5134,
+    "maps_url": "https://share.google/6Iibyuzc9FUYI1VD6"
   },
   {
     "id": "y002",
@@ -35,7 +36,8 @@
     "popularity": 75,
     "image_source": "Wikimedia Commons (CC BY-SA)",
     "lat": 3.8667,
-    "lng": 11.5167
+    "lng": 11.5167,
+    "maps_url": "https://share.google/COZUXlFo4dMkLCe5O"
   },
   {
     "id": "y003",
@@ -54,7 +56,8 @@
     "popularity": 70,
     "image_source": "Wikimedia Commons (CC BY-SA)",
     "lat": 3.8579,
-    "lng": 11.5074
+    "lng": 11.5074,
+    "maps_url": "https://share.google/NenhNiZahQ2ES0pgy"
   },
   {
     "id": "y004",
@@ -72,7 +75,8 @@
     "popularity": 65,
     "image_source": "Wikimedia Commons (CC BY-SA)",
     "lat": 3.8682,
-    "lng": 11.5157
+    "lng": 11.5157,
+    "maps_url": "https://share.google/7bqWPgykit05g5NBF"
   },
   {
     "id": "y005",
@@ -92,7 +96,8 @@
     "popularity": 86,
     "image_source": "Wikimedia Commons (photo d'époque, 1972 - le point de vue reste le même aujourd'hui)",
     "lat": 3.893,
-    "lng": 11.5237
+    "lng": 11.5237,
+    "maps_url": "https://share.google/C0GrdnAOJuavNqvt7"
   },
   {
     "id": "y006",
@@ -111,7 +116,8 @@
     "popularity": 68,
     "image_source": "Wikimedia Commons (CC BY-SA)",
     "lat": 3.858,
-    "lng": 11.487
+    "lng": 11.487,
+    "maps_url": "https://share.google/aoMuY2KuN2uo225KP"
   },
   {
     "id": "y007",
@@ -131,7 +137,8 @@
     "popularity": 72,
     "image_source": "Wikimedia Commons (CC BY-SA)",
     "lat": 3.6333,
-    "lng": 11.6167
+    "lng": 11.6167,
+    "maps_url": "https://share.google/SRUrZi8dBEtCWS9da"
   },
   {
     "id": "y008",
@@ -150,7 +157,8 @@
     "popularity": 60,
     "image_source": "Wikimedia Commons (CC BY-SA)",
     "lat": 3.8655,
-    "lng": 11.5183
+    "lng": 11.5183,
+    "maps_url": "https://share.google/79i6dKJAx8MfoMzF3"
   },
   {
     "id": "y009",
@@ -170,7 +178,8 @@
     "popularity": 55,
     "image_source": "Wikimedia Commons (CC BY-SA)",
     "lat": 3.8687,
-    "lng": 11.5187
+    "lng": 11.5187,
+    "maps_url": "https://share.google/UYkKWDh1e3PVhjt5d"
   },
   {
     "id": "y010",
@@ -189,7 +198,8 @@
     "popularity": 78,
     "image_source": "Wikimedia Commons (CC BY-SA)",
     "lat": 3.8647,
-    "lng": 11.5152
+    "lng": 11.5152,
+    "maps_url": "https://share.google/uiLXiKFHsiAZOl8Aa"
   },
   {
     "id": "y011",
@@ -207,7 +217,8 @@
     "popularity": 70,
     "image_source": "Wikimedia Commons (CC BY-SA)",
     "lat": 3.873,
-    "lng": 11.505
+    "lng": 11.505,
+    "maps_url": "https://share.google/oCCXAaDUzT1GgUi3G"
   },
   {
     "id": "y012",
@@ -226,7 +237,8 @@
     "popularity": 62,
     "image_source": "Unsplash (placeholder générique - pas le vrai lieu)",
     "lat": 3.88,
-    "lng": 11.495
+    "lng": 11.495,
+    "maps_url": "https://share.google/fpX1l3ijBZvtmmTWD"
   },
   {
     "id": "y013",
@@ -245,7 +257,8 @@
     "popularity": 50,
     "image_source": "Wikimedia Commons (via Wikidata Q15961646)",
     "lat": 3.875,
-    "lng": 11.52
+    "lng": 11.52,
+    "maps_url": "https://share.google/1YAUvO7hUz3k2lZTS"
   },
   {
     "id": "y014",
@@ -264,7 +277,8 @@
     "popularity": 48,
     "image_source": "Wikimedia Commons (Monastère bénédictin du Mont Fébé)",
     "lat": 3.8945,
-    "lng": 11.5227
+    "lng": 11.5227,
+    "maps_url": "https://share.google/5PiARq6IQ0A0erYU5"
   },
   {
     "id": "y015",
@@ -284,7 +298,8 @@
     "lat": 3.8815,
     "lng": 11.494,
     "founded_year": 1982,
-    "history": "Première pierre posée en 1975, inauguré le 12 mai 1982 - fruit d'une coopération sino-camerounaise. Le bâtiment s'étend sur 180 000 m² répartis en plusieurs salles pouvant accueillir de 25 à 2 000 personnes."
+    "history": "Première pierre posée en 1975, inauguré le 12 mai 1982 - fruit d'une coopération sino-camerounaise. Le bâtiment s'étend sur 180 000 m² répartis en plusieurs salles pouvant accueillir de 25 à 2 000 personnes.",
+    "maps_url": "https://share.google/3zwEQjvJ0ZsV2fr3L"
   },
   {
     "id": "y016",
@@ -302,7 +317,8 @@
     "popularity": 66,
     "image_source": "Wikimedia Commons (CC BY-SA)",
     "lat": 3.873,
-    "lng": 11.519
+    "lng": 11.519,
+    "maps_url": "https://share.google/h5iHW8OqaIL0IVhLC"
   },
   {
     "id": "y017",
@@ -321,7 +337,8 @@
     "popularity": 64,
     "image_source": "Unsplash (placeholder générique - pas le vrai lieu)",
     "lat": 3.85,
-    "lng": 11.51
+    "lng": 11.51,
+    "maps_url": "https://share.google/QKSYyphUtgDJUrgqg"
   },
   {
     "id": "y018",
@@ -342,7 +359,8 @@
     "lat": 3.8667,
     "lng": 11.5167,
     "founded_year": 1974,
-    "history": "Ouvert en 1974, ce fut l'un des premiers hôtels internationaux 5 étoiles du Cameroun et reste une référence pour les conférences et évènements diplomatiques à Yaoundé."
+    "history": "Ouvert en 1974, ce fut l'un des premiers hôtels internationaux 5 étoiles du Cameroun et reste une référence pour les conférences et évènements diplomatiques à Yaoundé.",
+    "maps_url": "https://share.google/nkldIZRPDMotRaaSQ"
   },
   {
     "id": "y019",
@@ -362,7 +380,8 @@
     "popularity": 74,
     "image_source": "Unsplash (placeholder générique - pas le vrai lieu)",
     "lat": 3.8918,
-    "lng": 11.5253
+    "lng": 11.5253,
+    "maps_url": "https://share.google/RcN7puTjCxdYXL8gG"
   },
   {
     "id": "y020",
@@ -380,7 +399,8 @@
     "popularity": 60,
     "image_source": "Unsplash (placeholder générique - pas le vrai lieu)",
     "lat": 3.8682,
-    "lng": 11.5157
+    "lng": 11.5157,
+    "maps_url": "https://share.google/GGydilVfQsrVb8xig"
   },
   {
     "id": "y021",
@@ -398,7 +418,8 @@
     "popularity": 67,
     "image_source": "Unsplash (placeholder générique - pas le vrai lieu)",
     "lat": 3.8655,
-    "lng": 11.5183
+    "lng": 11.5183,
+    "maps_url": "https://share.google/TL5Pl9s4oP1OtBrL8"
   },
   {
     "id": "y022",
@@ -415,7 +436,8 @@
     "popularity": 58,
     "image_source": "Unsplash (placeholder générique - pas le vrai lieu)",
     "lat": 3.8687,
-    "lng": 11.5187
+    "lng": 11.5187,
+    "maps_url": "https://share.google/xeeSFKH2C8uGuWn3V"
   },
   {
     "id": "y023",
@@ -434,7 +456,8 @@
     "popularity": 63,
     "image_source": "Unsplash (placeholder générique - pas le vrai lieu)",
     "lat": 3.8647,
-    "lng": 11.5152
+    "lng": 11.5152,
+    "maps_url": "https://share.google/FSfbvOki7SwmUf6yT"
   },
   {
     "id": "y024",
@@ -453,7 +476,8 @@
     "popularity": 76,
     "image_source": "Unsplash (placeholder générique - pas le vrai lieu)",
     "lat": 3.888,
-    "lng": 11.518
+    "lng": 11.518,
+    "maps_url": "https://share.google/VRAgupI6BcpC2EUPo"
   },
   {
     "id": "y025",
@@ -472,7 +496,8 @@
     "popularity": 71,
     "image_source": "Unsplash (placeholder générique - pas le vrai lieu)",
     "lat": 3.885,
-    "lng": 11.51
+    "lng": 11.51,
+    "maps_url": "https://share.google/tMvv3Io5tK1Kbyr68"
   },
   {
     "id": "y026",
@@ -491,7 +516,8 @@
     "popularity": 59,
     "image_source": "Unsplash (placeholder générique - pas le vrai lieu)",
     "lat": 3.8745,
-    "lng": 11.504
+    "lng": 11.504,
+    "maps_url": "https://share.google/NugwmEoRIYEGTPJ4O"
   },
   {
     "id": "y027",
@@ -512,7 +538,8 @@
     "lat": 3.8628,
     "lng": 11.5083,
     "founded_year": 1962,
-    "history": "Fondée en 1962 sous le nom d'Université Fédérale du Cameroun, c'est la plus ancienne université du pays et l'héritière directe de l'ancien Institut des Hautes Études."
+    "history": "Fondée en 1962 sous le nom d'Université Fédérale du Cameroun, c'est la plus ancienne université du pays et l'héritière directe de l'ancien Institut des Hautes Études.",
+    "maps_url": "https://share.google/ykK9lLBzJD2Mhetqm"
   },
   {
     "id": "y028",
@@ -531,7 +558,8 @@
     "lat": 3.9527,
     "lng": 11.5166,
     "founded_year": 2010,
-    "history": "Fondée en 2010 par le Pr Victor Mbarika, accréditée par le Ministère camerounais de l'Enseignement Supérieur en 2012. Le campus se trouve précisément aux coordonnées ci-contre, à Zoatoupsi/Messassi."
+    "history": "Fondée en 2010 par le Pr Victor Mbarika, accréditée par le Ministère camerounais de l'Enseignement Supérieur en 2012. Le campus se trouve précisément aux coordonnées ci-contre, à Zoatoupsi/Messassi.",
+    "maps_url": "https://share.google/vbRjNMISY3B7IcKL3"
   },
   {
     "id": "y029",
@@ -552,7 +580,8 @@
     "lat": 3.88556,
     "lng": 11.54056,
     "founded_year": 1972,
-    "history": "Inauguré en 1972, agrandi et rénové en 2005 puis en 2015-2016 pour la CAN féminine. Sa capacité actuelle est d'environ 42 500 places ; il a accueilli un record d'affluence estimé à 120 000 spectateurs dans les années 1980."
+    "history": "Inauguré en 1972, agrandi et rénové en 2005 puis en 2015-2016 pour la CAN féminine. Sa capacité actuelle est d'environ 42 500 places ; il a accueilli un record d'affluence estimé à 120 000 spectateurs dans les années 1980.",
+    "maps_url": "https://share.google/1QXEhR9h0SlkIUagj"
   },
   {
     "id": "y030",
@@ -571,7 +600,8 @@
     "popularity": 70,
     "image_source": "Unsplash (placeholder générique - pas le vrai lieu)",
     "lat": 3.885,
-    "lng": 11.5085
+    "lng": 11.5085,
+    "maps_url": "https://share.google/3NqdWeCklaIXmBy2b"
   },
   {
     "id": "y031",
@@ -589,7 +619,8 @@
     "popularity": 45,
     "image_source": "Unsplash (placeholder générique - pas le vrai magasin)",
     "lat": 3.888,
-    "lng": 11.5195
+    "lng": 11.5195,
+    "maps_url": "https://share.google/R6s9WorP5jxjWEKTi"
   },
   {
     "id": "y032",
@@ -607,7 +638,8 @@
     "popularity": 42,
     "image_source": "Unsplash (placeholder générique - pas le vrai magasin)",
     "lat": 3.867,
-    "lng": 11.5175
+    "lng": 11.5175,
+    "maps_url": "https://share.google/9OaQ9U4p249Vl1u6n"
   },
   {
     "id": "y033",
@@ -625,7 +657,8 @@
     "popularity": 35,
     "image_source": "Unsplash (placeholder générique - pas le vrai lieu)",
     "lat": 3.864,
-    "lng": 11.51
+    "lng": 11.51,
+    "maps_url": "https://share.google/ZABJAxJamEWczSpb7"
   },
   {
     "id": "y034",
@@ -643,7 +676,8 @@
     "popularity": 30,
     "image_source": "Unsplash (placeholder générique - pas le vrai lieu)",
     "lat": 3.8668,
-    "lng": 11.5178
+    "lng": 11.5178,
+    "maps_url": "https://share.google/OVbVgv1gfkFyLjuky"
   },
   {
     "id": "y035",
@@ -660,7 +694,8 @@
     "popularity": 25,
     "image_source": "Unsplash (placeholder générique - pas le vrai bâtiment)",
     "lat": 3.869,
-    "lng": 11.5165
+    "lng": 11.5165,
+    "maps_url": "https://share.google/IwQstKnLZdPWHCIhh"
   },
   {
     "id": "y036",
@@ -677,7 +712,8 @@
     "popularity": 22,
     "image_source": "Unsplash (placeholder générique - pas le vrai bâtiment)",
     "lat": 3.8675,
-    "lng": 11.5145
+    "lng": 11.5145,
+    "maps_url": "https://share.google/5JfbXOLF0oRk4XQW4"
   },
   {
     "id": "y037",
@@ -696,7 +732,8 @@
     "image_source": "Unsplash (placeholder générique)",
     "lat": 3.858,
     "lng": 11.501,
-    "founded_year": 1952
+    "founded_year": 1952,
+    "maps_url": "https://share.google/uRPFkLwZsYvAm8gYm"
   },
   {
     "id": "y038",
@@ -714,7 +751,8 @@
     "image_source": "Unsplash (placeholder générique)",
     "lat": 3.902,
     "lng": 11.512,
-    "founded_year": 1956
+    "founded_year": 1956,
+    "maps_url": "https://share.google/TOLOHeUHrR8Y0mNAZ"
   },
   {
     "id": "y039",
@@ -731,7 +769,8 @@
     "popularity": 26,
     "image_source": "Unsplash (placeholder générique)",
     "lat": 3.869,
-    "lng": 11.515
+    "lng": 11.515,
+    "maps_url": "https://share.google/IoVU2wE0PmzGs9dxV"
   },
   {
     "id": "y040",
@@ -749,7 +788,8 @@
     "image_source": "Unsplash (placeholder générique) — localisation approximative, à vérifier",
     "lat": 3.97,
     "lng": 11.61,
-    "founded_year": 2009
+    "founded_year": 2009,
+    "maps_url": "https://share.google/JOo7WvITU5AKyou3C"
   },
   {
     "id": "y041",
@@ -768,7 +808,8 @@
     "lat": 3.8714,
     "lng": 11.5104,
     "founded_year": 1933,
-    "history": "L'un des plus anciens hôpitaux du Cameroun, fondé en 1933 durant la période coloniale française ; il reste aujourd'hui le principal centre hospitalier de référence du pays."
+    "history": "L'un des plus anciens hôpitaux du Cameroun, fondé en 1933 durant la période coloniale française ; il reste aujourd'hui le principal centre hospitalier de référence du pays.",
+    "maps_url": "https://share.google/u2rPfC23bxfaoWsns"
   },
   {
     "id": "y042",
@@ -786,7 +827,8 @@
     "image_source": "Unsplash (placeholder générique)",
     "lat": 3.9066,
     "lng": 11.5414,
-    "founded_year": 1985
+    "founded_year": 1985,
+    "maps_url": "https://share.google/L5PIWQ9kxTtHL52DJ"
   },
   {
     "id": "y043",
@@ -804,7 +846,8 @@
     "image_source": "Unsplash (placeholder générique)",
     "lat": 3.8752,
     "lng": 11.5299,
-    "founded_year": 2002
+    "founded_year": 2002,
+    "maps_url": "https://share.google/hK3iexdjowmgbhGwM"
   },
   {
     "id": "y044",
@@ -821,7 +864,8 @@
     "popularity": 32,
     "image_source": "Unsplash (placeholder générique)",
     "lat": 3.7226,
-    "lng": 11.5533
+    "lng": 11.5533,
+    "maps_url": "https://share.google/yAU95qKnlkihaULF8"
   },
   {
     "id": "y045",
@@ -839,7 +883,8 @@
     "image_source": "Unsplash (placeholder générique)",
     "lat": 3.874,
     "lng": 11.512,
-    "founded_year": 2009
+    "founded_year": 2009,
+    "maps_url": "https://share.google/sxxApbOmjPMUrI4r0"
   },
   {
     "id": "y046",
@@ -857,7 +902,8 @@
     "popularity": 20,
     "image_source": "Unsplash (placeholder générique)",
     "lat": 3.855,
-    "lng": 11.515
+    "lng": 11.515,
+    "maps_url": "https://share.google/DhpMQFxnIKMNPRxZn"
   },
   {
     "id": "y047",
@@ -875,7 +921,8 @@
     "popularity": 19,
     "image_source": "Unsplash (placeholder générique) — localisation approximative, à vérifier",
     "lat": 3.876,
-    "lng": 11.509
+    "lng": 11.509,
+    "maps_url": "https://share.google/S1PX1xtVBo98eCAbe"
   },
   {
     "id": "y048",
@@ -892,7 +939,8 @@
     "popularity": 23,
     "image_source": "Unsplash (placeholder générique)",
     "lat": 3.883,
-    "lng": 11.519
+    "lng": 11.519,
+    "maps_url": "https://share.google/6dIpE1zoaAncWB4gd"
   },
   {
     "id": "y049",
@@ -909,7 +957,8 @@
     "popularity": 17,
     "image_source": "Unsplash (placeholder générique)",
     "lat": 3.867,
-    "lng": 11.517
+    "lng": 11.517,
+    "maps_url": "https://share.google/LbAnXBughlSnPDV6n"
   },
   {
     "id": "y050",
@@ -927,6 +976,7 @@
     "popularity": 16,
     "image_source": "Unsplash (placeholder générique) — localisation approximative, à vérifier",
     "lat": 3.866,
-    "lng": 11.5155
+    "lng": 11.5155,
+    "maps_url": "https://share.google/rOUwHc4SxN4jsJI0E"
   }
 ]
