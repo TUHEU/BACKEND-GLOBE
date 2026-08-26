@@ -12,12 +12,16 @@ from ..security import get_current_user
 
 router = APIRouter(tags=["Destinations"])
 
-CATEGORIES = ["attraction", "museum", "nature", "market", "restaurant", "cafe", "hotel", "entertainment", "education", "sports", "supermarket", "administrative"]
+CATEGORIES = ["attraction", "museum", "nature", "market", "restaurant", "cafe", "hotel", "entertainment", "education", "sports", "supermarket", "administrative", "travel_agency", "bar", "snack", "gaming", "health", "transport"]
 
 
 class DestinationReviewRequest(BaseModel):
     rating: int = Field(ge=1, le=5)
     comment: str = Field(default="", max_length=500)
+
+
+class ReviewReplyRequest(BaseModel):
+    text: str = Field(min_length=1, max_length=300)
 
 
 @router.get("/categories")
@@ -148,6 +152,31 @@ def submit_destination_review(
         "comment": body.comment.strip(),
         "created_at": datetime.now(timezone.utc).isoformat(),
     })
+    return review
+
+
+@router.post("/destinations/{dest_id}/reviews/{review_id}/replies", status_code=201)
+def reply_to_review(
+    dest_id: str,
+    review_id: str,
+    body: ReviewReplyRequest,
+    current=Depends(get_current_user),
+):
+    """Répondre à l'avis d'un autre utilisateur (fil de discussion sous
+    chaque avis) - jusqu'ici les avis étaient une simple liste plate,
+    personne ne pouvait réagir à ce que quelqu'un d'autre avait écrit."""
+    if not storage.find_destination(dest_id):
+        raise HTTPException(status_code=404, detail="Destination not found")
+    reply = {
+        "id": storage.new_reply_id(),
+        "user_id": current["id"],
+        "author_name": current.get("full_name") or "Utilisateur",
+        "text": body.text.strip(),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    review = storage.add_reply_to_review(dest_id, review_id, reply)
+    if review is None:
+        raise HTTPException(status_code=404, detail="Review not found")
     return review
 
 
