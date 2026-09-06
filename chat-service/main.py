@@ -9,10 +9,14 @@ Public group chat room where every registered user can:
   • Share their GPS location (lat/lng)
   • React with emoji to any message
   • Edit or delete their own text messages within 5 minutes of sending
+  • See a "user is typing…" indicator
+  • Reply to a specific earlier message (quoted preview)
+  • @-mention another user (they get a notification via User Service)
 
 Transport: WebSocket (/ws/chat?token=<JWT>) — types: text/image/audio/video/
-           location/delete/edit/react (send), message/delete/edit/reaction/
-           system/online/error (receive)
+           location/delete/edit/react/typing (send, text/image/audio/video
+           also accept an optional reply_to=<message_id>) — message/delete/
+           edit/reaction/typing/system/online/error (receive)
 REST:       POST   /chat/upload            → media upload → returns URL
             GET    /chat/history           → last N messages (auth required)
             GET    /chat/online            → count of live connections
@@ -21,11 +25,12 @@ REST:       POST   /chat/upload            → media upload → returns URL
 
 Run: uvicorn main:app --reload --host 0.0.0.0 --port 8005
 """
+import asyncio
 import json
 import logging
 import mimetypes
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -44,15 +49,21 @@ from fastapi.responses import FileResponse
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 
-from app.config import SECRET_KEY, ALGORITHM, DATA_DIR, UPLOAD_DIR, MAX_UPLOAD_BYTES
+from app.config import (
+    SECRET_KEY, ALGORITHM, DATA_DIR, UPLOAD_DIR, MAX_UPLOAD_BYTES,
+    LIVEKIT_URL, LIVEKIT_API_KEY, LIVEKIT_API_SECRET, GLOBAL_CALL_ROOM,
+)
 from app.storage import (
     load_messages,
     append_message,
     delete_message,
     edit_message,
     add_reaction,
+    find_message,
 )
 from app.connection_manager import ConnectionManager
+from app.clients import notify_mention
+from livekit import api
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("chat-service")
@@ -83,9 +94,10 @@ def _decode_token(token: str) -> Optional[dict]:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id = payload.get("sub")
         full_name = payload.get("full_name", "Explorateur")
+        avatar = payload.get("avatar")
         if not user_id:
             return None
-        return {"id": user_id, "full_name": full_name}
+        return {"id": user_id, "full_name": full_name, "avatar": avatar}
     except JWTError:
         return None
 
@@ -182,6 +194,33 @@ def chat_history(
 @app.get("/chat/online")
 def online_count():
     return {"online": manager.count()}
+
+
+@app.post("/chat/call/token")
+def global_call_token(current=Depends(get_current_user)):
+    """Everyone gets a token to the SAME room - the Global call is one
+    shared space, not a call-per-session, matching "tap to join whoever's
+    already talking" rather than a scheduling/session concept."""
+    if not LIVEKIT_API_KEY or not LIVEKIT_API_SECRET or not LIVEKIT_URL:
+        raise HTTPException(
+            status_code=503,
+            detail="Les appels ne sont pas configurés sur ce serveur (LIVEKIT_* manquant).",
+        )
+    token = (
+        api.AccessToken(LIVEKIT_API_KEY, LIVEKIT_API_SECRET)
+        .with_identity(current["id"])
+        .with_name(current.get("full_name") or "Utilisateur")
+        .with_grants(api.VideoGrants(
+            room_join=True,
+            room=GLOBAL_CALL_ROOM,
+            can_publish=True,
+            can_subscribe=True,
+            can_publish_data=True,
+        ))
+        .with_ttl(timedelta(hours=2))
+        .to_jwt()
+    )
+    return {"url": LIVEKIT_URL, "token": token, "room": GLOBAL_CALL_ROOM}
 
 
 _DELETE_EDIT_ERRORS = {
@@ -308,6 +347,25 @@ async def websocket_chat(websocket: WebSocket, token: str = Query(...)):
                     }))
                 continue
 
+            # ── Typing indicator (ephemeral, not stored) ─────────────────
+            if msg_type == "typing":
+                await manager.broadcast(json.dumps({
+                    "type": "typing",
+                    "user_id": user["id"],
+                    "user_name": user["full_name"],
+                }))
+                continue
+
+            # ── Global call presence (not the call media itself - that's
+            # LiveKit, this is just "hey, someone's in the call room") ──
+            if msg_type in ("call_start", "call_end"):
+                await manager.broadcast(json.dumps({
+                    "type": msg_type,
+                    "user_id": user["id"],
+                    "user_name": user["full_name"],
+                }))
+                continue
+
             # ── Emoji reaction ──────────────────────────────────────────
             if msg_type == "react":
                 mid = payload.get("message_id", "")
@@ -327,15 +385,39 @@ async def websocket_chat(websocket: WebSocket, token: str = Query(...)):
             if msg_type not in allowed_kinds:
                 continue
 
+            reply_preview = None
+            reply_to_id = payload.get("reply_to")
+            if reply_to_id:
+                original = find_message(reply_to_id)
+                if original is not None:
+                    # Snapshot at send-time so the quote still makes sense
+                    # even if the original is edited/deleted afterwards.
+                    reply_preview = {
+                        "id": original["id"],
+                        "user_name": original["user_name"],
+                        "type": original["type"],
+                        "text": original.get("text", ""),
+                    }
+
+            # Client sends the exact user ids it tagged via the @-mention
+            # picker (see chat_hub_screen mention autocomplete) rather than
+            # us trying to regex-parse "@Full Name" back out of free text,
+            # which is ambiguous the moment two people's names overlap or a
+            # name contains spaces.
+            mentions = [m for m in (payload.get("mentions") or []) if isinstance(m, str)][:20]
+
             message = {
                 "id": uuid.uuid4().hex,
                 "user_id": user["id"],
                 "user_name": user["full_name"],
+                "avatar": user.get("avatar"),
                 "type": msg_type,
                 "text": payload.get("text", ""),
                 "media_url": payload.get("media_url"),         # image/audio/video
                 "media_content_type": payload.get("media_content_type"),
                 "location": payload.get("location"),           # {lat, lng, label?}
+                "reply_to": reply_preview,
+                "mentions": mentions,
                 "reactions": {},
                 "ts": _now(),
             }
@@ -344,6 +426,14 @@ async def websocket_chat(websocket: WebSocket, token: str = Query(...)):
 
             envelope = {"type": "message", "message": message}
             await manager.broadcast(json.dumps(envelope))
+
+            if mentions:
+                preview = message["text"][:120] or "vous a mentionné dans le chat"
+                for mentioned_id in mentions:
+                    if mentioned_id != user["id"]:
+                        asyncio.create_task(
+                            asyncio.to_thread(notify_mention, token, mentioned_id, preview)
+                        )
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)
