@@ -30,7 +30,7 @@ import json
 import logging
 import mimetypes
 import uuid
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -51,7 +51,7 @@ from jose import JWTError, jwt
 
 from app.config import (
     SECRET_KEY, ALGORITHM, DATA_DIR, UPLOAD_DIR, MAX_UPLOAD_BYTES,
-    LIVEKIT_URL, LIVEKIT_API_KEY, LIVEKIT_API_SECRET, GLOBAL_CALL_ROOM,
+    GLOBAL_CALL_ROOM,
 )
 from app.storage import (
     load_messages,
@@ -63,7 +63,6 @@ from app.storage import (
 )
 from app.connection_manager import ConnectionManager
 from app.clients import notify_mention
-from livekit import api
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("chat-service")
@@ -83,6 +82,33 @@ app.add_middleware(
 )
 
 manager = ConnectionManager()
+
+# ── WebRTC call signalling (mesh) ───────────────────────────────────────────
+# room_id -> {user_id: user_name}. Purely in-memory presence for whoever is
+# currently "in" a given call room (the fixed GLOBAL_CALL_ROOM, or a
+# deterministic per-pair id for DM calls) - NOT the media itself, which goes
+# peer-to-peer over WebRTC once signalling has connected two browsers/apps.
+# A room simply stops existing once its last member leaves/disconnects.
+call_rooms: dict[str, dict[str, str]] = {}
+_call_rooms_lock = asyncio.Lock()
+
+
+async def _call_room_leave(room: str, user_id: str) -> None:
+    """Remove user_id from room and tell whoever's left (only them - not a
+    global broadcast, since other chat members were never told this room's
+    membership in the first place). Safe to call even if the user was never
+    in that room (e.g. duplicate leave/disconnect)."""
+    async with _call_rooms_lock:
+        members = call_rooms.get(room)
+        if not members or user_id not in members:
+            return
+        members.pop(user_id, None)
+        remaining = list(members.keys())
+        if not members:
+            call_rooms.pop(room, None)
+    event = json.dumps({"type": "call_peer_left", "room": room, "user_id": user_id})
+    for uid in remaining:
+        await manager.send_to_user(uid, event)
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login", auto_error=False)
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -198,29 +224,12 @@ def online_count():
 
 @app.post("/chat/call/token")
 def global_call_token(current=Depends(get_current_user)):
-    """Everyone gets a token to the SAME room - the Global call is one
-    shared space, not a call-per-session, matching "tap to join whoever's
-    already talking" rather than a scheduling/session concept."""
-    if not LIVEKIT_API_KEY or not LIVEKIT_API_SECRET or not LIVEKIT_URL:
-        raise HTTPException(
-            status_code=503,
-            detail="Les appels ne sont pas configurés sur ce serveur (LIVEKIT_* manquant).",
-        )
-    token = (
-        api.AccessToken(LIVEKIT_API_KEY, LIVEKIT_API_SECRET)
-        .with_identity(current["id"])
-        .with_name(current.get("full_name") or "Utilisateur")
-        .with_grants(api.VideoGrants(
-            room_join=True,
-            room=GLOBAL_CALL_ROOM,
-            can_publish=True,
-            can_subscribe=True,
-            can_publish_data=True,
-        ))
-        .with_ttl(timedelta(hours=2))
-        .to_jwt()
-    )
-    return {"url": LIVEKIT_URL, "token": token, "room": GLOBAL_CALL_ROOM}
+    """Everyone joins the SAME room - the Global call is one shared space,
+    not a call-per-session ("tap to join whoever's already talking").
+    This no longer mints a LiveKit token: calls are peer-to-peer WebRTC,
+    signalled over this service's own /ws/chat (see call_join/call_signal/
+    call_leave above) - the client just needs the fixed room id to join."""
+    return {"room": GLOBAL_CALL_ROOM}
 
 
 _DELETE_EDIT_ERRORS = {
@@ -356,14 +365,73 @@ async def websocket_chat(websocket: WebSocket, token: str = Query(...)):
                 }))
                 continue
 
-            # ── Global call presence (not the call media itself - that's
-            # LiveKit, this is just "hey, someone's in the call room") ──
+            # ── Global call presence banner (unrelated to WebRTC signalling
+            # below - this is just "someone's in the global call" for the
+            # chat UI, e.g. a banner inviting others to join) ─────────────
             if msg_type in ("call_start", "call_end"):
                 await manager.broadcast(json.dumps({
                     "type": msg_type,
                     "user_id": user["id"],
                     "user_name": user["full_name"],
                 }))
+                continue
+
+            # ── WebRTC mesh signalling ────────────────────────────────────
+            # No media ever touches this server - only the SDP offer/answer
+            # and ICE candidates needed for two browsers/apps to find each
+            # other and negotiate a direct peer-to-peer connection. `room`
+            # is either GLOBAL_CALL_ROOM or a deterministic per-pair id the
+            # client builds for DM calls (sorted "uidA_uidB").
+
+            # Join: register presence in the room, tell the joiner who's
+            # already there (so *they* initiate offers to each - standard
+            # "new peer offers to existing peers" mesh convention, avoids
+            # both sides racing to offer each other), then tell existing
+            # members someone new arrived (they just wait for an offer).
+            if msg_type == "call_join":
+                room = (payload.get("room") or "").strip()
+                if not room:
+                    continue
+                async with _call_rooms_lock:
+                    members = call_rooms.setdefault(room, {})
+                    existing = [
+                        {"user_id": uid, "user_name": name}
+                        for uid, name in members.items() if uid != user["id"]
+                    ]
+                    members[user["id"]] = user["full_name"]
+                await websocket.send_text(json.dumps({
+                    "type": "call_room_state", "room": room, "peers": existing,
+                }))
+                joined_event = json.dumps({
+                    "type": "call_peer_joined", "room": room,
+                    "user_id": user["id"], "user_name": user["full_name"],
+                })
+                for peer in existing:
+                    await manager.send_to_user(peer["user_id"], joined_event)
+                continue
+
+            # Relay: forward an SDP offer/answer or ICE candidate to exactly
+            # one target peer, untouched, just stamped with who it's from.
+            if msg_type == "call_signal":
+                room = (payload.get("room") or "").strip()
+                target_id = payload.get("target_user_id")
+                data = payload.get("data")
+                if not room or not target_id or data is None:
+                    continue
+                await manager.send_to_user(target_id, json.dumps({
+                    "type": "call_signal", "room": room,
+                    "from_user_id": user["id"], "from_user_name": user["full_name"],
+                    "data": data,
+                }))
+                continue
+
+            # Leave: explicit hang-up (in addition to the disconnect cleanup
+            # below, for when the socket itself stays open but the user just
+            # backs out of the call screen).
+            if msg_type == "call_leave":
+                room = (payload.get("room") or "").strip()
+                if room:
+                    await _call_room_leave(room, user["id"])
                 continue
 
             # ── Emoji reaction ──────────────────────────────────────────
@@ -444,6 +512,11 @@ async def websocket_chat(websocket: WebSocket, token: str = Query(...)):
         })
         await manager.broadcast(leave_event)
         await manager.broadcast(json.dumps({"type": "online", "count": manager.count()}))
+        # Also drop them from any call room(s) they were in - a dropped
+        # connection is a dropped call, same as an explicit call_leave.
+        rooms_to_check = [r for r, members in call_rooms.items() if user["id"] in members]
+        for room in rooms_to_check:
+            await _call_room_leave(room, user["id"])
 
 
 def _now() -> str:
